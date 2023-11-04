@@ -53,3 +53,9 @@ bin_suits([R/S|T],Di,He,Sp,Cl, Di_,He_,Sp_,Cl_) :- S = d, bin_suits(T,Di,He,Sp,C
 bin_suits([R/S|T],Di,He,Sp,Cl, Di_,He_,Sp_,Cl_) :- S = h, bin_suits(T,Di,He,Sp,Cl,Di_,[R/S|He_],Sp_,Cl_).
 bin_suits([R/S|T],Di,He,Sp,Cl, Di_,He_,Sp_,Cl_) :- S = s, bin_suits(T,Di,He,Sp,Cl,Di_,He_,[R/S|Sp_],Cl_).
 bin_suits([R/S|T],Di,He,Sp,Cl, Di_,He_,Sp_,Cl_) :- S = c, bin_suits(T,Di,He,Sp,Cl,Di_,He_,Sp_,[R/S|Cl_]).
+
+% ?- bin_suits_2([3/h, 4/h, 5/h, 9/d, t/d, j/d, q/d, 4/d, 4/c, 4/s], H, hand{d:[],h:[],s:[],c:[]}).
+% H = hand{c:[4/c], d:[4/d, q/d, j/d, t/d, 9/d], h:[5/h, 4/h, 3/h], s:[4/s]}.
+
+bin_suits_2([],H,H).
+bin_suits_2([R/S|T],H,H_) :- bin_suits_2(T,H,H_.put(S,[R/S|H_.get(S)])).
