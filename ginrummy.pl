@@ -59,3 +59,46 @@ bin_suits([R/S|T],Di,He,Sp,Cl, Di_,He_,Sp_,Cl_) :- S = c, bin_suits(T,Di,He,Sp,C
 
 bin_suits_2([],H,H).
 bin_suits_2([R/S|T],H,H_) :- bin_suits_2(T,H,H_.put(S,[R/S|H_.get(S)])).
+
+sort_suits(Hand,Hand2) :-
+    sort(Hand.d,D2),
+    sort(Hand.h,H2),
+    sort(Hand.s,S2),
+    sort(Hand.c,C2),
+    Hand2 = hand{d:D2,h:H2,s:S2,c:C2}.
+
+% https://stackoverflow.com/a/49503900/562440
+% sets_of_4_2(hand{c:[4/c], d:[4/d, q/d, j/d, t/d, 9/d], h:[5/h, 4/h, 3/h], s:[4/s]}, Sets).
+% Sets = [[4/d, 4/h, 4/s, 4/c]].
+
+sets_of_4_2(Hand,Sets) :-
+    findall(
+        [R1/S1,R2/S2,R3/S3,R4/S4],
+        (
+            member(R1/S1,Hand.d),
+            member(R2/S2,Hand.h),
+            member(R3/S3,Hand.s),
+            member(R4/S4,Hand.c),
+            R1=R2,R2=R3,R3=R4
+        ),Sets).
+
+sets_of_3_2_(Hand,Sa,Sb,Sc,Sets) :-
+    findall(
+        [R1/S1,R2/S2,R3/S3],
+        (
+            member(R1/S1,Hand.Sa),
+            member(R2/S2,Hand.Sb),
+            member(R3/S3,Hand.Sc),
+            R1=R2,R2=R3
+        ),Sets).
+
+% sets_of_3_2(hand{c:[4/c,5/c], d:[4/d, q/d, j/d, t/d, 9/d], h:[5/h, 4/h, 3/h], s:[5/s,4/s]},Sets).
+% Sets = [[4/d, 4/h, 4/s]] ;
+% Sets = [[4/d, 4/h, 4/c]] ;
+% Sets = [[4/d, 4/s, 4/c]] ;
+% Sets = [[5/h, 5/s, 5/c], [4/h, 4/s, 4/c]] ;
+
+sets_of_3_2(Hand,Sets) :-
+    comb(3,[d,h,s,c],X),
+    [Sa,Sb,Sc] = X,
+    sets_of_3_2_(Hand,Sa,Sb,Sc,Set).
